@@ -1,2 +1,2 @@
 # LightHome
-A platform for shutterbug
+A platform for shutterbugs communication
