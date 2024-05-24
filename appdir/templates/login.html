@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='image/登录背景.jpg') }}"); /* 背景图像 */
+            background-size: cover; /* 确保背景图覆盖整个页面 */
+            background-position: center; /* 图片居中 */
+            background-repeat: no-repeat; /* 不重复 */
+            background-attachment: fixed; /* 背景固定 */
+            background-color: #f0f0f0; /* 背景颜色（备用） */
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9); /* 导航栏背景和透明度 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        /* 卡片样式 */
+        .card {
+            margin: 90px auto 30px auto;  
+            width: 300px; /* 卡片宽度 */
+            background-color: rgba(255, 255, 255, 0.5); /* 设置背景透明度 */
+            border-radius: 5px; /* 圆角 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        .card-header {
+            padding: 10px;
+            background-color: rgba(247, 247, 247, 0.5); /* 卡片头部的背景和透明度 */
+            border-bottom: 1px solid #ddd; /* 底部边框 */
+        }
+
+        /* 表单样式 */
+        .form-row {
+            margin-bottom: 15px; /* 行间距 */
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        /* 提交按钮样式 */
+         #submit {
+            margin: 0 auto;
+        }
+    </style>
+
+    <!-- 登录卡片 -->
+    <div class="card w-25">
+        <h5 class="card-header text-center">登录</h5>
+        <div class="card-body">
+            <form action="" method="post">
+                {{ form.hidden_tag() }} <!-- 隐藏字段 -->
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label>用户名</label>
+                        {% if form.username.errors %}
+                            {{ form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.username(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label>密码</label>
+                        {% if form.password.errors %}
+                            {{ form.password(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.password(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 提交按钮 -->
+                <div class="form-row text-center">
+                    {{ form.submit(id="submit") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

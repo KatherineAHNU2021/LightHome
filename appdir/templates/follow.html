@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+        /* 设置整个页面的背景图片 */
+        body {
+            background-image: url("{{ url_for('static', filename='image/喜欢背景.jpg') }}");
+            background-size: cover; /* 确保背景图片覆盖整个页面 */
+            background-position: center; /* 图片居中 */
+            background-attachment: fixed; /* 背景固定，不随滚动变化 */
+            background-repeat: no-repeat; /* 背景不重复 */
+        }
+
+        /* 确保内容与背景图片有足够的对比度 */
+        .card {
+            margin: 30px;
+            background-color: rgba(255, 255, 255, 0.7); /* 白色带透明度 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* 阴影 */
+        }
+
+        /* 其他现有的样式设置 */
+        .info {
+            margin-left: 20px;
+        }
+
+        #my-div {
+            margin-top: 30px;
+        }
+
+        #my-div img {
+            margin-left: 60px;
+            cursor: pointer;
+        }
+
+        #answer-content {
+            height: 300px;
+        }
+
+        .answer-text:hover {
+            cursor: pointer;
+        }
+
+        .agree-btn {
+            width: 80px;
+        }
+
+        .disagree-btn {
+            width: 80px;
+        }
+
+        .follow-btn {
+            margin-left: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+
+            $('.agree-btn').click(function () {
+                const user_id = {{ user_id }};
+                const answer_id = $(this).parent().children(':first').html();
+                $.post('/api/agree', { "user_id": user_id, "answer_id": answer_id })
+                    .done(function () {
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        alert("Something went wrong with the network connection!");
+                    });
+            });
+
+            $('.disagree-btn').click(function () {
+                const user_id = {{ user_id }};
+                const answer_id = $(this).parent().children(':first').html();
+                $.post('/api/disagree', { "user_id": user_id, "answer_id": answer_id })
+                    .done(function () {
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        alert("Something went wrong with the network connection!");
+                    });
+            });
+
+            $('.heart').click(function () {
+                const user_id = {{ user_id }};
+                const answer_id = $(这).parent().children(':first').html();
+                $.post('/api/heart', { "user_id": user_id, "answer_id": answer_id })
+                    .done(function () {
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        alert("Something went wrong with the network connection!");
+                    });
+            });
+
+            $('.submit-comment').click(function () {
+                const comment = $(this).parent().children('.comment-text').val();
+                if (comment === "") {
+                    alert("The comment should not be empty!");
+                    return;
+                }
+                const user_id = {{ user_id }};
+                const answer_id = $(这).parent().children(':first').html();
+                $.post('/api/comment', { "user_id": user_id, "answer_id": answer_id, "comment": comment })
+                    .done(function () {
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        alert("Something went wrong with the network connection!");
+                    });
+            });
+
+            $('.follow-btn').click(function () {
+                const user_id = {{ user_id }};
+                const followed_name = $(这).parent().children().eq(1).html();
+                $.post('/api/follow', { "user_id": user_id, "followed_name": followed_name })
+                    .done(function () {
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        alert("Something went wrong with the network connection!");
+                    });
+            });
+
+            $('.answer-text').click(function () {
+                const question_id = $(这).parent().children().eq(1).html();
+                window.location.href = '/question/' + question_id;
+            });
+        });
+    </script>
+
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('follow') }}">关注</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('favorites') }}">喜欢</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">已关注的用户</h5>
+            <p class="card-text">这些是您关注的用户的回答。</p>
+            {% for answer in answers %}
+                <div class="card text-left">
+                    <h5 class="card-header">
+                        <img src="../static/image/bootstrap-icon/person-fill.svg" width="25" height="25"
+                             class="d-inline-block align-middle"
+                             alt="" loading="lazy">
+                        <span class="align-middle">{{ answer.username }}</span>
+                        {% if answer.followed %}
+                            <button type="button" class="btn btn-primary align-middle follow-btn">已关注</button>
+                        {% else %}
+                            <button type="button" class="btn btn-outline-primary align-middle follow-btn">关注
+                            </button>
+                        {% endif %}
+                    </h5>
+                    <div class="card-body">
+                        <p class="card-text answer-text">{{ answer.content }}</p>
+                        <p class="card-text" style="display: none">{{ answer.question_id }}</p>
+                        <div id="my-div">
+                            <span style="display: none">{{ answer.id }}</span>
+                            <p class="card-text text-muted">{{ answer.time }}</p>
+                            <button type="button" class="btn btn-outline-primary agree-btn">
+                                {{ answer.agree }}
+                            </button>
+                            <button type="button" class="btn btn-outline-danger disagree-btn">
+                                {{ answer.disagree }}
+                            </button>
+                            <img src="../static/image/bootstrap-icon/chat-square.svg" width="20" height="20"
+                                 class="d-inline-block align-middle" 
+                                 data-toggle="collapse" 
+                                 data-target="#multiCollapse{{ loop.index }}" 
+                                 aria-expanded="false" 
+                                 aria-controls="#multiCollapse{{ loop.index }}" 
+                                 alt="" loading="lazy">
+                            {% if answer.like %}
+                                <img src="../static/image/bootstrap-icon/heart-fill.svg" width="20" height="20" 
+                                     class="heart">
+                            {% else %}
+                                <img src="../static/image/bootstrap-icon/heart.svg" width="20" height="20" 
+                                     class="heart">
+                            {% endif %}
+
+
+                            <div class="collapse multi-collapse" id="multiCollapse{{ loop.index }}">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% for comment in answer.comments %}
+                                            <div>
+                                                <img src="../static/image/bootstrap-icon/person-fill.svg" width="20" 
+                                                     height="20" 
+                                                     class="d-inline-block align-middle">
+                                                <span class="align-middle">{{ comment.username }}</span>
+                                            </div>
+                                            <p class="card-text">{{ comment.content }}</p>
+                                            <hr>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="container">
+                                            <div class="row">
+                                                <input type="text" class="form-control col-10 comment-text" 
+                                                       placeholder="写下你的评论">
+                                                <button class="btn form-control col-1 btn-outline-primary 
+                                                             submit-comment">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

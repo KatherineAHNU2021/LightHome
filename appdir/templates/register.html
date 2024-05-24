@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+         body {
+            background-image: url("{{ url_for('static', filename='image/注册背景.jpg') }}"); /* 背景图 */
+            background-size: cover; /* 确保背景覆盖整个页面 */
+            background-position: center; /* 图片居中 */
+            background-repeat: no-repeat; /* 不重复 */
+            background-attachment: fixed; /* 背景固定 */
+            background-color: #f0f0f0; /* 背景颜色（备用） */
+        }
+          /* 卡片样式 */
+        .card {
+            margin: 90px auto 30px auto;  
+            width: 300px; /* 卡片宽度 */
+            background-color: rgba(255, 255, 255, 0.5); /* 卡片背景的透明度 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        .card-header {
+            padding: 10px;
+            background-color: rgba(247, 247, 247, 0.5); /* 卡片头部的透明度 */
+            border-bottom: 1px solid #ddd; /* 底部边框 */
+        }
+       
+
+        #submit {
+            margin: 0 auto;
+        }
+
+    </style>
+
+    <div class="card w-25">
+        <h5 class="card-header text-center">注册</h5>
+        <div class="card-body">
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label>用户名</label>
+                        {% if form.errors %}
+                            {% if form.username.errors %}
+                                {{ form.username(class="form-control is-invalid") }}
+                            {% else %}
+                                {{ form.username(class="form-control is-valid") }}
+                            {% endif %}
+                        {% else %}
+                            {{ form.username }}
+                        {% endif %}
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label>邮箱</label>
+                        {% if form.errors %}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control is-invalid") }}
+                            {% else %}
+                                {{ form.email(class="form-control is-valid") }}
+                            {% endif %}
+                        {% else %}
+                            {{ form.email }}
+                        {% endif %}
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label>密码</label>
+                        {% if form.errors %}
+                            {% if form.password.errors %}
+                                {{ form.password(class="form-control is-invalid") }}
+                            {% else %}
+                                {{ form.password(class="form-control is-valid") }}
+                            {% endif %}
+                        {% else %}
+                            {{ form.password }}
+                        {% endif %}
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label>再次确认密码</label>
+                        {% if form.errors %}
+                            {% if form.repassword.errors %}
+                                {{ form.repassword(class="form-control is-invalid") }}
+                            {% else %}
+                                {{ form.repassword(class="form-control is-valid") }}
+                            {% endif %}
+                        {% else %}
+                            {{ form.repassword }}
+                        {% endif %}
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.repassword.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row text-center">
+                    {{ form.submit }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

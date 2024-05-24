@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+        /* 设置整个页面的背景图片 */
+        body {
+            background-image: url("{{ url_for('static', filename='image/发现背景.jpg') }}");
+            background-size: cover; /* 确保图片覆盖整个页面 */
+            background-position: center; /* 图片居中 */
+            background-attachment: fixed; /* 背景固定，不随滚动变化 */
+            background-repeat: no-repeat; /* 背景不重复 */
+        }
+
+        /* 调整卡片的样式，确保内容与背景之间有对比度 */
+        .card {
+            margin: 30px;
+            background-color: rgba(255, 255, 255, 0.7); /* 白色带透明度 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* 阴影 */
+        }
+
+        .info {
+            margin-left: 20px;
+        }
+
+        #my-div {
+            margin-top: 30px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+            $('#question-a').addClass('active');
+        });
+    </script>
+
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('questions',type='hot') }}">热门</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('questions',type='new') }}">最新</a>
+                </li>
+                <li class="nav-item">
+                    {% if username %}
+                        <a class="nav-link" href="{{ url_for('questions',type='invitation') }}">邀请</a>
+                    {% else %}
+                        <a class="nav-link disabled" href="#">邀请</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">最新问题</h5>
+            <p class="card-text">这里有最新的问题！</p>
+            {% for question in questions %}
+                <div class="card text-left">
+                    <h5 class="card-header">
+                        <span class="align-middle">{{ question.title }}</span>
+                    </h5>
+                    <div class="card-body">
+                        <img src="../static/image/bootstrap-icon/person-fill.svg" width="25" height="25"
+                             class="d-inline-block align-middle"
+                             alt="" loading="lazy">
+                        <span class="card-title">{{ question.username }}</span>
+                        <p class="card-text">{{ question.description }}</p>
+                        <div id="my-div">
+                            <p class="card-text text-muted">{{ question.time }}</p>
+                            {% if username %}
+                                <a href="/question{{ question.id }}" class="btn btn-outline-primary">查看回答</a>
+                            {% else %}
+                                <a href="/login" class="btn btn-outline-primary">查看回答</a>
+                            {% endif %}
+                            <span class="card-text info text-muted">{{ question.answers }} 回答</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
